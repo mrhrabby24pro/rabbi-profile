@@ -15,11 +15,11 @@ const initialBooks: Book[] = [
   {
     id: 1,
     title: "আল কুরআন (বাংলা অনুবাদ)",
-    author: "অনুবাদ: হাফেজ মুনির উদ্দিন আহমদ",
+    author: "অনুবাদ: ড. জহুরুল হক",
     cover: "https://images.unsplash.com/photo-1591453089816-0fbb971b454c?q=80&w=500&auto=format&fit=crop",
-    link: "https://www.banglaquran.com/pdf/Quran-Sharif-Bangla.pdf",
+    link: "https://cdlb.com.bd/wp-content/uploads/2024/11/Al-Quran-Bangla-Translation-Dr.-Zohurul-Hoque.pdf",
     category: 'Quran',
-    pages: "৬১১ পৃষ্ঠা"
+    pages: "১০৫১ পৃষ্ঠা"
   },
   {
     id: 2,
