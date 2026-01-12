@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import MusicPlayer from './components/MusicPlayer';
+import EbookReader from './components/EbookReader';
 import Resources from './components/Resources';
 import About from './components/About';
 import Projects from './components/Projects';
@@ -68,6 +69,7 @@ const App: React.FC = () => {
           onUpdate={(hero) => updateData({...siteData, hero})} 
         />
         <MusicPlayer />
+        <EbookReader />
         <Resources />
         <About 
           data={siteData.about} 
