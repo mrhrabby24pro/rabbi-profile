@@ -18,27 +18,64 @@ const DailyNews: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
+      // Create a fresh instance for the call
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      
+      const prompt = `আজকের বাংলাদেশের শীর্ষ ৫টি আলোচিত খবরের শিরোনাম, সংক্ষিপ্ত সারমর্ম এবং সোর্স দিন। 
+      প্রতিটি খবরের জন্য নিচের ফরম্যাটটি কঠোরভাবে অনুসরণ করুন:
+      আইটেম ১
+      শিরোনাম: [খবরের শিরোনাম]
+      সারমর্ম: [২ লাইনে খবরের মূল অংশ]
+      সোর্স: [সংবাদপত্রের নাম]
+      
+      এভাবে ৫টি আইটেম দিন।`;
+
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: "আজকের বাংলাদেশের শীর্ষ ৫টি আলোচিত খবরের শিরোনাম, সংক্ষিপ্ত সারমর্ম এবং মূল সোর্স বা লিঙ্ক দিন। তথ্যগুলো অবশ্যই আজকের সময়ের হতে হবে। JSON ফরম্যাটে দিন: [{title, summary, source, url}]। শুধু JSON টি রিটার্ন করুন।",
+        model: "gemini-3-pro-preview",
+        contents: prompt,
         config: {
           tools: [{ googleSearch: {} }],
         },
       });
 
       const text = response.text || "";
-      // Extract JSON block if model returns markdown
-      const jsonMatch = text.match(/\[.*\]/s);
-      if (jsonMatch) {
-        const parsedNews = JSON.parse(jsonMatch[0]);
-        setNews(parsedNews);
+      
+      // Extract grounding links if available as per requirements
+      const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      const links = groundingChunks
+        .map((chunk: any) => chunk.web?.uri)
+        .filter((uri: string | undefined) => !!uri);
+
+      // Robust parsing logic to split the text into 5 news items
+      const itemsRaw = text.split(/আইটেম \d/);
+      const parsedNews: NewsItem[] = [];
+
+      itemsRaw.forEach((block, index) => {
+        if (!block.trim()) return;
+        
+        const titleMatch = block.match(/শিরোনাম:\s*(.*)/);
+        const summaryMatch = block.match(/সারমর্ম:\s*(.*)/);
+        const sourceMatch = block.match(/সোর্স:\s*(.*)/);
+
+        if (titleMatch && summaryMatch) {
+          parsedNews.push({
+            title: titleMatch[1].trim(),
+            summary: summaryMatch[1].trim(),
+            source: sourceMatch ? sourceMatch[1].trim() : "সংবাদ মাধ্যম",
+            // Use grounding link if available, fallback to a search link
+            url: links[parsedNews.length] || `https://www.google.com/search?q=${encodeURIComponent(titleMatch[1].trim())}`
+          });
+        }
+      });
+
+      if (parsedNews.length > 0) {
+        setNews(parsedNews.slice(0, 5));
       } else {
-        throw new Error("Invalid response format");
+        throw new Error("Could not parse news items from AI response");
       }
     } catch (err) {
       console.error("News fetch error:", err);
-      setError("খবর লোড করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।");
+      setError("দুঃখিত, বর্তমানে সংবাদগুলো লোড করা যাচ্ছে না। দয়া করে রিফ্রেশ বাটনে ক্লিক করুন।");
     } finally {
       setLoading(false);
     }
@@ -60,7 +97,7 @@ const DailyNews: React.FC = () => {
               </span>
               <h3 className="text-3xl font-black text-gray-900">আজকের আলোচিত খবর</h3>
             </div>
-            <p className="text-gray-500 text-sm">বাংলাদেশের সর্বশেষ গুরুত্বপূর্ণ সংবাদসমূহ (স্লাইড করুন)</p>
+            <p className="text-gray-500 text-sm">বাংলাদেশের সর্বশেষ ৫টি গুরুত্বপূর্ণ সংবাদ (রিয়েল-টাইম)</p>
           </div>
           
           <button 
@@ -83,48 +120,60 @@ const DailyNews: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="flex gap-6 overflow-x-auto no-scrollbar">
+          <div className="flex gap-6 overflow-x-auto no-scrollbar pb-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex-none w-[300px] md:w-[450px] animate-pulse bg-gray-50 h-64 rounded-3xl border border-gray-100"></div>
+              <div key={i} className="flex-none w-[300px] md:w-[450px] animate-pulse bg-gray-50 h-72 rounded-[2.5rem] border border-gray-100"></div>
             ))}
           </div>
         ) : error ? (
-          <div className="bg-red-50 text-red-600 p-8 rounded-3xl text-center font-bold">
-            {error}
+          <div className="bg-red-50 p-12 rounded-[2.5rem] text-center">
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-red-600 font-bold mb-4">{error}</p>
+            <button onClick={fetchNews} className="px-6 py-2 bg-red-600 text-white rounded-lg text-sm font-bold">আবার চেষ্টা করুন</button>
           </div>
         ) : (
           <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
             {news.map((item, idx) => (
               <div 
                 key={idx} 
-                className="flex-none w-[300px] md:w-[500px] snap-center group bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col gap-4"
+                className="flex-none w-[300px] md:w-[500px] snap-center group bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col gap-4 relative overflow-hidden"
               >
-                <div className="flex justify-between items-center">
-                  <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0 text-gray-400 group-hover:bg-red-50 group-hover:text-red-500 transition-colors">
+                {/* Background Decor */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="flex justify-between items-center relative z-10">
+                  <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0 text-gray-400 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
                     <span className="text-xl font-black">০{idx + 1}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">Trending</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">সংবাদ</span>
                   </div>
                 </div>
                 
-                <div className="flex-grow flex flex-col">
-                  <h4 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors leading-tight line-clamp-2 h-14">
+                <div className="flex-grow flex flex-col relative z-10">
+                  <h4 className="text-xl md:text-2xl font-black text-gray-800 mb-3 group-hover:text-red-600 transition-colors leading-tight line-clamp-2 h-16 md:h-20">
                     {item.title}
                   </h4>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3 h-15">
+                  <p className="text-sm text-gray-500 leading-relaxed mb-6 line-clamp-3 h-15">
                     {item.summary}
                   </p>
                   
-                  <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">উৎস: {item.source}</span>
+                  <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">সোর্স</span>
+                      <span className="text-xs font-bold text-gray-700">{item.source}</span>
+                    </div>
                     <a 
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:gap-3 transition-all"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-xs font-black hover:bg-red-600 hover:text-white transition-all"
                     >
-                      বিস্তারিত পড়ুন 
+                      মূল খবর 
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
