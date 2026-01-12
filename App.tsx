@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import DailyNews from './components/DailyNews';
 import MusicPlayer from './components/MusicPlayer';
 import EbookReader from './components/EbookReader';
 import DigitalDirectory from './components/DigitalDirectory';
@@ -70,7 +69,6 @@ const App: React.FC = () => {
           editMode={isAdmin} 
           onUpdate={(hero) => updateData({...siteData, hero})} 
         />
-        <DailyNews />
         <MusicPlayer />
         <EbookReader />
         <DigitalDirectory />
