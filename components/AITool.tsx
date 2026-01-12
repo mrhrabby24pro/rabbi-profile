@@ -2,12 +2,21 @@
 import React, { useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
 
+const presets = [
+  { id: 'luxury', name: 'লাক্সারি গোল্ড', prompt: 'Luxury premium gold and marble background with soft cinematic studio lighting.' },
+  { id: 'nature', name: 'প্রকৃতি', prompt: 'Natural outdoor setting with blurred green plants and soft morning sunlight.' },
+  { id: 'cyber', name: 'সাইবারপাঙ্ক', prompt: 'Neon futuristic cyberpunk city background with blue and pink glowing lights.' },
+  { id: 'minimal', name: 'মিনিমালিস্ট', prompt: 'Ultra minimalist clean white aesthetic background with soft shadows.' },
+  { id: 'festive', name: 'উৎসব', prompt: 'Festive celebratory background with bokeh lights and decorative elements.' }
+];
+
 const AITool: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [activePreset, setActivePreset] = useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -18,6 +27,11 @@ const AITool: React.FC = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const applyPreset = (preset: typeof presets[0]) => {
+    setPrompt(preset.prompt);
+    setActivePreset(preset.id);
   };
 
   const generateDesign = async () => {
@@ -44,7 +58,7 @@ const AITool: React.FC = () => {
               },
             },
             {
-              text: `You are a professional graphic designer. Create a high-quality, commercial marketing banner using this product image. Style: ${prompt || 'Professional, minimalist, premium lighting, high-end studio background'}. Make the background look natural and high-end.`,
+              text: `You are a professional graphic designer. Create a high-quality, commercial marketing banner using this product image. Style: ${prompt || 'Professional, minimalist, premium lighting, high-end studio background'}. The product should be centrally placed and integrated naturally into the environment.`,
             },
           ],
         },
@@ -77,7 +91,7 @@ const AITool: React.FC = () => {
         <p className="text-gray-600 mb-10 max-w-lg">আপনার প্রোডাক্টের একটি ছবি দিন এবং এআই-এর মাধ্যমে প্রফেশনাল ব্যানার ডিজাইন করুন মুহূর্তেই।</p>
 
         <div className="grid lg:grid-cols-2 gap-10 items-start">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+          <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">স্টেপ ১: প্রোডাক্ট ছবি দিন</label>
               <div 
@@ -85,13 +99,13 @@ const AITool: React.FC = () => {
                 onClick={() => document.getElementById('imageInput')?.click()}
               >
                 {image ? (
-                  <img src={image} alt="Uploaded" className="max-h-48 mx-auto rounded-lg shadow-sm" />
+                  <img src={image} alt="Uploaded" className="max-h-40 mx-auto rounded-lg shadow-sm" />
                 ) : (
-                  <div className="space-y-2">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <div className="space-y-2 py-4">
+                    <svg className="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                       <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <p className="text-gray-500 text-sm">ক্লিক করে ছবি আপলোড করুন</p>
+                    <p className="text-gray-500 text-sm font-medium">ক্লিক করে ছবি আপলোড করুন</p>
                   </div>
                 )}
                 <input id="imageInput" type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
@@ -99,13 +113,31 @@ const AITool: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">স্টেপ ২: ডিজাইনের বর্ণনা দিন (ঐচ্ছিক)</label>
+              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">স্টেপ ২: কুইক ডিজাইন স্টাইল</label>
+              <div className="flex flex-wrap gap-2">
+                {presets.map(p => (
+                  <button 
+                    key={p.id}
+                    onClick={() => applyPreset(p)}
+                    className={`px-3 py-2 rounded-full text-xs font-bold border transition-all ${activePreset === p.id ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-white hover:border-blue-300'}`}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">স্টেপ ৩: কাস্টম বর্ণনা (ঐচ্ছিক)</label>
               <textarea 
                 className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-                placeholder="যেমন: 'একটি লাক্সারি গোল্ডেন ব্যাকগ্রাউন্ড দাও' বা 'প্রকৃতির মাঝে ডিজাইন করো'..."
-                rows={3}
+                placeholder="যেমন: 'একটি লাক্সারি গোল্ডেন ব্যাকগ্রাউন্ড দাও'..."
+                rows={2}
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  setActivePreset(null);
+                }}
               />
             </div>
 
