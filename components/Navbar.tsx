@@ -6,10 +6,10 @@ const Navbar: React.FC = () => {
 
   const menuItems = [
     { label: "হোম", href: "#home" },
+    { label: "সংবাদ", href: "#news" },
     { label: "মিউজিক", href: "#music" },
     { label: "ইবুক", href: "#ebooks" },
     { label: "ডিরেক্টরি", href: "#directory" },
-    { label: "রিসোর্স", href: "#resources" },
     { label: "সম্পর্কে", href: "#about" },
     { label: "প্রজেক্ট", href: "#projects" },
     { label: "যোগাযোগ", href: "#contact" }
@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
           <ul className="hidden md:flex space-x-6 text-[13px] font-bold">
             {menuItems.map(item => (
               <li key={item.href}>
-                <a href={item.href} className="text-gray-500 hover:text-blue-600 transition-colors py-2 uppercase tracking-wide">
+                <a href={item.href} className="text-gray-500 hover:text-red-600 transition-colors py-2 uppercase tracking-wide">
                   {item.label}
                 </a>
               </li>
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
 
           {/* Hamburger Toggle */}
           <button 
-            className="md:hidden p-2 text-gray-600 hover:text-blue-600 transition-colors"
+            className="md:hidden p-2 text-gray-600 hover:text-red-600 transition-colors"
             onClick={() => setIsOpen(true)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
               <li key={item.href}>
                 <a 
                   href={item.href} 
-                  className="block text-lg text-gray-700 hover:text-blue-600 py-2 border-b border-gray-50"
+                  className="block text-lg text-gray-700 hover:text-red-600 py-2 border-b border-gray-50"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}
