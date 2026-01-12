@@ -16,7 +16,7 @@ const spots: Spot[] = [
     name: "কক্সবাজার সমুদ্র সৈকত",
     location: "কক্সবাজার, চট্টগ্রাম",
     description: "কক্সবাজার সমুদ্র সৈকত বাংলাদেশের কক্সবাজার জেলায় অবস্থিত বিশ্বের দীর্ঘতম প্রাকৃতিক বালুময় সমুদ্র সৈকত। এটি ১২০ কিলোমিটার (৭৫ মাইল) পর্যন্ত বিস্তৃত। এই সৈকতের বৈশিষ্ট্য হলো পুরো সৈকতটি বালুময়, এখানে কাদা দেখা যায় না। লাবণী পয়েন্ট, সুগন্ধা পয়েন্ট ও কলাতলী পয়েন্ট পর্যটকদের কাছে সবচেয়ে জনপ্রিয় এবং প্রধান আকর্ষণ কেন্দ্র।",
-    image: "https://images.unsplash.com/photo-1583307525381-4277a0669f69?q=80&w=800&auto=format&fit=crop",
+    image: "https://ctgkhobor.com/wp-content/uploads/2022/07/Coxbazar-Beach.jpg",
     tag: "সমুদ্র সৈকত"
   },
   {
@@ -66,37 +66,42 @@ const TouristSpots: React.FC = () => {
           </div>
         </div>
 
-        {/* Standard Slider Alignment */}
+        {/* Standard Slider Alignment with 16:9 Aspect Ratio */}
         <div className="flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar">
           {spots.map((spot) => (
             <div 
               key={spot.id} 
               onClick={() => setSelectedSpot(spot)}
-              className="flex-none w-[150px] sm:w-[180px] md:w-[220px] snap-start group cursor-pointer"
+              className="flex-none w-[240px] sm:w-[280px] md:w-[320px] snap-start group cursor-pointer"
             >
-              {/* Card Image */}
-              <div className="relative aspect-[4/5] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1 mb-3">
+              {/* Card Image - Changed to 16:9 aspect ratio */}
+              <div className="relative aspect-video rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1 mb-4">
                 <img 
                   src={spot.image} 
                   alt={spot.name} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
+                <div className="absolute top-3 right-3">
+                    <span className="px-3 py-1 bg-white/80 backdrop-blur-md text-orange-600 text-[9px] font-black rounded-full uppercase tracking-tighter shadow-sm">
+                        {spot.tag}
+                    </span>
+                </div>
               </div>
 
-              {/* Card Meta */}
-              <div className="px-0.5">
-                <div className="flex items-center gap-1.5 mb-1">
-                    <svg className="w-2.5 h-2.5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+              {/* Card Meta - Perfectly Aligned */}
+              <div className="px-1">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                    <svg className="w-3 h-3 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest truncate">{spot.location}</span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate">{spot.location}</span>
                 </div>
-                <h4 className="text-[13px] md:text-base font-black text-gray-800 leading-tight mb-1 group-hover:text-orange-600 transition-colors">
+                <h4 className="text-base md:text-lg font-black text-gray-800 leading-tight mb-2 group-hover:text-orange-600 transition-colors">
                     {spot.name}
                 </h4>
                 <div className="flex items-center gap-1">
-                   <span className="text-[9px] font-bold text-orange-500 uppercase tracking-tighter">বিস্তারিত পড়ুন</span>
-                   <svg className="w-2.5 h-2.5 text-orange-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <span className="text-[10px] font-bold text-orange-500 uppercase tracking-tight">বিস্তারিত তথ্য দেখুন</span>
+                   <svg className="w-3 h-3 text-orange-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                    </svg>
                 </div>
@@ -116,36 +121,38 @@ const TouristSpots: React.FC = () => {
             className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in"
             onClick={() => setSelectedSpot(null)}
           ></div>
-          <div className="relative bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl animate-scale-in">
+          <div className="relative bg-white w-full max-w-2xl rounded-[2.5rem] overflow-hidden shadow-2xl animate-scale-in">
             <button 
                 onClick={() => setSelectedSpot(null)}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/20 backdrop-blur-md text-white rounded-full hover:bg-white hover:text-gray-900 transition-all shadow-lg"
+                className="absolute top-4 right-4 z-10 p-2 bg-black/20 backdrop-blur-md text-white rounded-full hover:bg-white hover:text-gray-900 transition-all shadow-lg"
             >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
             
-            <div className="h-60 md:h-72 overflow-hidden">
+            <div className="aspect-video overflow-hidden">
                 <img src={selectedSpot.image} alt={selectedSpot.name} className="w-full h-full object-cover" />
             </div>
             
-            <div className="p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-2">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{selectedSpot.location}</span>
+            <div className="p-8 md:p-10">
+                <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2.5 h-2.5 bg-orange-500 rounded-full"></div>
+                    <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest">{selectedSpot.location}</span>
                 </div>
-                <h3 className="text-2xl font-black text-gray-900 mb-4">{selectedSpot.name}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed bg-gray-50 p-5 rounded-2xl border border-gray-100 italic">
-                    {selectedSpot.description}
-                </p>
-                <div className="mt-8 flex justify-between items-center">
-                    <span className="px-4 py-1.5 bg-orange-50 text-orange-600 rounded-full text-[10px] font-bold uppercase tracking-widest">
+                <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-5">{selectedSpot.name}</h3>
+                <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 mb-8">
+                    <p className="text-sm md:text-base text-gray-600 leading-relaxed italic">
+                        {selectedSpot.description}
+                    </p>
+                </div>
+                <div className="flex justify-between items-center">
+                    <span className="px-5 py-2 bg-orange-50 text-orange-600 rounded-full text-[11px] font-bold uppercase tracking-widest">
                         {selectedSpot.tag}
                     </span>
                     <button 
                         onClick={() => setSelectedSpot(null)}
-                        className="px-6 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold hover:bg-gray-800 transition-all"
+                        className="px-8 py-3 bg-gray-900 text-white rounded-2xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
                     >
                         বন্ধ করুন
                     </button>
