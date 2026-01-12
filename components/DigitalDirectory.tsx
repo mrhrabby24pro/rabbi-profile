@@ -119,7 +119,11 @@ const DigitalDirectory: React.FC = () => {
             filteredItems.map((item) => (
               <div 
                 key={item.id} 
-                className="flex-none w-[280px] md:w-[320px] snap-center bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group"
+                className={`flex-none w-[280px] md:w-[320px] snap-center bg-white p-6 rounded-3xl border border-gray-100 border-b-4 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col ${
+                  item.category === 'Emergency' ? 'border-b-red-500' :
+                  item.category === 'Education' ? 'border-b-blue-500' :
+                  'border-b-emerald-500'
+                }`}
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className={`p-3 rounded-2xl ${
