@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
+import TechStackModal from './TechStackInfo';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isTechModalOpen, setIsTechModalOpen] = useState(false);
 
   const menuItems = [
     { label: "হোম", href: "#home" },
@@ -10,8 +12,19 @@ const Navbar: React.FC = () => {
     { label: "ডিরেক্টরি", href: "#directory" },
     { label: "সম্পর্কে", href: "#about" },
     { label: "প্রজেক্ট", href: "#projects" },
+    { label: "প্রজেক্ট সম্পর্কে", href: "tech-info", special: true },
     { label: "যোগাযোগ", href: "#contact" }
   ];
+
+  const handleItemClick = (e: React.MouseEvent, item: any) => {
+    if (item.special) {
+      e.preventDefault();
+      setIsTechModalOpen(true);
+      setIsOpen(false);
+    } else {
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
@@ -26,7 +39,11 @@ const Navbar: React.FC = () => {
           <ul className="hidden md:flex space-x-6 text-[13px] font-bold">
             {menuItems.map(item => (
               <li key={item.href}>
-                <a href={item.href} className="text-gray-500 hover:text-red-600 transition-colors py-2 uppercase tracking-wide">
+                <a 
+                  href={item.href} 
+                  onClick={(e) => handleItemClick(e, item)}
+                  className={`transition-colors py-2 uppercase tracking-wide ${item.special ? 'text-blue-600 hover:text-blue-800' : 'text-gray-500 hover:text-red-600'}`}
+                >
                   {item.label}
                 </a>
               </li>
@@ -69,8 +86,8 @@ const Navbar: React.FC = () => {
               <li key={item.href}>
                 <a 
                   href={item.href} 
-                  className="block text-lg text-gray-700 hover:text-red-600 py-2 border-b border-gray-50"
-                  onClick={() => setIsOpen(false)}
+                  className={`block text-lg py-2 border-b border-gray-50 ${item.special ? 'text-blue-600 font-black' : 'text-gray-700'}`}
+                  onClick={(e) => handleItemClick(e, item)}
                 >
                   {item.label}
                 </a>
@@ -82,6 +99,12 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Tech Stack Modal */}
+      <TechStackModal 
+        isOpen={isTechModalOpen} 
+        onClose={() => setIsTechModalOpen(false)} 
+      />
     </>
   );
 };
