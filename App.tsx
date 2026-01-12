@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import EbookReader from './components/EbookReader';
 import DigitalDirectory from './components/DigitalDirectory';
+import TouristSpots from './components/TouristSpots';
 import Resources from './components/Resources';
 import About from './components/About';
 import Projects from './components/Projects';
@@ -71,6 +72,7 @@ const App: React.FC = () => {
         />
         <EbookReader />
         <DigitalDirectory />
+        <TouristSpots />
         <Resources />
         <About 
           data={siteData.about} 
