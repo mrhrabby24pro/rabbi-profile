@@ -1,37 +1,57 @@
 
 import React from 'react';
 
-const About: React.FC = () => {
+interface AboutProps {
+  data: { p1: string; p2: string };
+  editMode: boolean;
+  onUpdate: (data: any) => void;
+}
+
+const About: React.FC<AboutProps> = ({ data, editMode, onUpdate }) => {
   return (
-    <section id="about" className="py-16 bg-white">
-      <div className="container-custom px-6">
-        <h3 className="text-2xl font-bold mb-8 border-l-4 border-blue-500 pl-4">আমার সম্পর্কে</h3>
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
-            <p>
-              প্রযুক্তির জগতের প্রতি আমার আগ্রহ ছোটবেলা থেকেই। আমি বিশ্বাস করি শেখার কোনো শেষ নেই। প্রতিদিন নতুন কিছু শেখা এবং সেটাকে বাস্তবে রূপান্তর করাই আমার লক্ষ্য।
-            </p>
-            <p>
-              আমার আগ্রহের প্রধান ক্ষেত্রগুলো হলো ওয়েব ডেভেলপমেন্ট, প্রোগ্রামিং এবং ব্যক্তিগত উন্নয়ন। প্রযুক্তির মাধ্যমে সমস্যা সমাধান করতে আমি ভালোবাসি।
-            </p>
+    <section id="about" className="py-20 bg-white">
+      <div className="container-custom">
+        <h3 className="text-2xl font-bold mb-10 border-l-4 border-blue-600 pl-4">আমার সম্পর্কে</h3>
+        
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="space-y-6">
+            {editMode ? (
+              <div className="space-y-4 bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                <p className="text-xs font-bold text-yellow-600 uppercase">প্যারাগ্রাফ ১</p>
+                <textarea 
+                  value={data.p1}
+                  onChange={(e) => onUpdate({...data, p1: e.target.value})}
+                  className="w-full p-3 border rounded-md text-gray-600"
+                  rows={4}
+                />
+                <p className="text-xs font-bold text-yellow-600 uppercase mt-4">প্যারাগ্রাফ ২</p>
+                <textarea 
+                  value={data.p2}
+                  onChange={(e) => onUpdate({...data, p2: e.target.value})}
+                  className="w-full p-3 border rounded-md text-gray-600"
+                  rows={4}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 text-lg leading-relaxed space-y-6">
+                <p>{data.p1}</p>
+                <p>{data.p2}</p>
+              </div>
+            )}
           </div>
+
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-gray-50 rounded-lg text-center border border-gray-100 hover:shadow-md transition-shadow">
-              <span className="block text-blue-600 font-bold text-xl mb-1">শিখছি</span>
-              <span className="text-sm">নতুন টেকনোলজি</span>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg text-center border border-gray-100 hover:shadow-md transition-shadow">
-              <span className="block text-green-600 font-bold text-xl mb-1">তৈরি করছি</span>
-              <span className="text-sm">বাস্তব প্রজেক্ট</span>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg text-center border border-gray-100 hover:shadow-md transition-shadow">
-              <span className="block text-purple-600 font-bold text-xl mb-1">শেয়ার করছি</span>
-              <span className="text-sm">অর্জিত জ্ঞান</span>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg text-center border border-gray-100 hover:shadow-md transition-shadow">
-              <span className="block text-orange-600 font-bold text-xl mb-1">লক্ষ্য</span>
-              <span className="text-sm">ব্যক্তিগত উন্নয়ন</span>
-            </div>
+            {[
+              { label: 'শিখছি', value: 'টেকনোলজি', color: 'blue' },
+              { label: 'তৈরি করছি', value: 'প্রজেক্ট', color: 'green' },
+              { label: 'শেয়ার করছি', value: 'ব্লগ', color: 'purple' },
+              { label: 'লক্ষ্য', value: 'উন্নয়ন', color: 'orange' }
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-shadow">
+                <span className={`text-${stat.color}-600 font-black text-2xl mb-1`}>{stat.label}</span>
+                <span className="text-sm text-gray-500 font-medium">{stat.value}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
