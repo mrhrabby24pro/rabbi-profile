@@ -73,12 +73,12 @@ const DigitalDirectory: React.FC = () => {
   });
 
   return (
-    <section id="directory" className="py-20 bg-gray-50">
+    <section id="directory" className="py-20 bg-gray-50 overflow-hidden">
       <div className="container-custom">
         <div className="mb-12">
           <div className="border-l-4 border-blue-600 pl-4 mb-8">
             <h3 className="text-3xl font-black text-gray-900">ডিজিটাল ডিরেক্টরি</h3>
-            <p className="text-gray-500 text-sm mt-1">গুরুত্বপূর্ণ প্রতিষ্ঠান ও জরুরি সেবার তথ্যসমূহ</p>
+            <p className="text-gray-500 text-sm mt-1">গুরুত্বপূর্ণ প্রতিষ্ঠান ও জরুরি সেবার তথ্যসমূহ (স্লাইড করুন)</p>
           </div>
 
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
@@ -97,7 +97,7 @@ const DigitalDirectory: React.FC = () => {
             </div>
 
             {/* Tabs */}
-            <div className="flex bg-gray-50 p-1 rounded-xl overflow-x-auto max-w-full">
+            <div className="flex bg-gray-50 p-1 rounded-xl overflow-x-auto max-w-full no-scrollbar">
               {['All', 'Emergency', 'Education', 'Govt'].map((tab) => (
                 <button
                   key={tab}
@@ -113,10 +113,14 @@ const DigitalDirectory: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Sliding Cards Container */}
+        <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
-              <div key={item.id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+              <div 
+                key={item.id} 
+                className="flex-none w-[280px] md:w-[320px] snap-center bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group"
+              >
                 <div className="flex justify-between items-start mb-4">
                   <div className={`p-3 rounded-2xl ${
                     item.category === 'Emergency' ? 'bg-red-50 text-red-500' :
@@ -140,8 +144,8 @@ const DigitalDirectory: React.FC = () => {
                   <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{item.category}</span>
                 </div>
 
-                <h4 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{item.name}</h4>
-                <p className="text-sm text-gray-500 mb-6 line-clamp-2">{item.description}</p>
+                <h4 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors h-14 overflow-hidden">{item.name}</h4>
+                <p className="text-sm text-gray-500 mb-6 line-clamp-2 h-10 overflow-hidden">{item.description}</p>
                 
                 <div className="flex gap-3 mt-auto">
                   <a 
@@ -166,12 +170,16 @@ const DigitalDirectory: React.FC = () => {
               </div>
             ))
           ) : (
-            <div className="col-span-full py-20 text-center">
+            <div className="w-full py-20 text-center">
               <p className="text-gray-400 font-bold">দুঃখিত, কোনো তথ্য পাওয়া যায়নি!</p>
             </div>
           )}
         </div>
       </div>
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </section>
   );
 };

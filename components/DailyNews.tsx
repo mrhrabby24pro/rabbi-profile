@@ -49,7 +49,7 @@ const DailyNews: React.FC = () => {
   }, []);
 
   return (
-    <section id="news" className="py-20 bg-white">
+    <section id="news" className="py-20 bg-white overflow-hidden">
       <div className="container-custom">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div className="border-l-4 border-red-600 pl-4">
@@ -60,7 +60,7 @@ const DailyNews: React.FC = () => {
               </span>
               <h3 className="text-3xl font-black text-gray-900">আজকের আলোচিত খবর</h3>
             </div>
-            <p className="text-gray-500 text-sm">বাংলাদেশের সর্বশেষ গুরুত্বপূর্ণ সংবাদসমূহ</p>
+            <p className="text-gray-500 text-sm">বাংলাদেশের সর্বশেষ গুরুত্বপূর্ণ সংবাদসমূহ (স্লাইড করুন)</p>
           </div>
           
           <button 
@@ -83,9 +83,9 @@ const DailyNews: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="grid gap-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="animate-pulse bg-gray-50 h-32 rounded-3xl border border-gray-100"></div>
+          <div className="flex gap-6 overflow-x-auto no-scrollbar">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex-none w-[300px] md:w-[450px] animate-pulse bg-gray-50 h-64 rounded-3xl border border-gray-100"></div>
             ))}
           </div>
         ) : error ? (
@@ -93,45 +93,53 @@ const DailyNews: React.FC = () => {
             {error}
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
             {news.map((item, idx) => (
               <div 
                 key={idx} 
-                className="group bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row gap-6 items-start"
+                className="flex-none w-[300px] md:w-[500px] snap-center group bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col gap-4"
               >
-                <div className="w-full md:w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0 text-gray-400 group-hover:bg-red-50 group-hover:text-red-500 transition-colors">
-                  <span className="text-2xl font-black">০{idx + 1}</span>
+                <div className="flex justify-between items-center">
+                  <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0 text-gray-400 group-hover:bg-red-50 group-hover:text-red-500 transition-colors">
+                    <span className="text-xl font-black">০{idx + 1}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">Trending</span>
+                  </div>
                 </div>
                 
-                <div className="flex-grow">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">Trending</span>
-                    <span className="text-xs text-gray-400 font-medium">উৎস: {item.source}</span>
-                  </div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors leading-tight">
+                <div className="flex-grow flex flex-col">
+                  <h4 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors leading-tight line-clamp-2 h-14">
                     {item.title}
                   </h4>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3 h-15">
                     {item.summary}
                   </p>
                   
-                  <a 
-                    href={item.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:gap-3 transition-all"
-                  >
-                    বিস্তারিত পড়ুন 
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </a>
+                  <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">উৎস: {item.source}</span>
+                    <a 
+                      href={item.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:gap-3 transition-all"
+                    >
+                      বিস্তারিত পড়ুন 
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </section>
   );
 };
