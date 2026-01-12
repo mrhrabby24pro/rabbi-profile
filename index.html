@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'SolaimanLipi', sans-serif !important;
-            scroll-behavior: smooth;
             background-color: #f9fafb;
         }
         .container-custom {
@@ -18,6 +20,10 @@
             margin: 0 auto;
             padding-left: 1.5rem;
             padding-right: 1.5rem;
+        }
+        /* Handle fixed navbar offset for anchor links */
+        [id] {
+            scroll-margin-top: 5rem;
         }
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import MusicPlayer from './components/MusicPlayer';
 import EbookReader from './components/EbookReader';
 import DigitalDirectory from './components/DigitalDirectory';
 import Resources from './components/Resources';
@@ -10,6 +9,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 
 const defaultData = {
   hero: {
@@ -69,7 +69,6 @@ const App: React.FC = () => {
           editMode={isAdmin} 
           onUpdate={(hero) => updateData({...siteData, hero})} 
         />
-        <MusicPlayer />
         <EbookReader />
         <DigitalDirectory />
         <Resources />
@@ -87,6 +86,7 @@ const App: React.FC = () => {
       </main>
       
       <Footer />
+      <ScrollToTop />
 
       {/* Admin Toggle Button */}
       <button 

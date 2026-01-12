@@ -6,7 +6,6 @@ const Navbar: React.FC = () => {
 
   const menuItems = [
     { label: "হোম", href: "#home" },
-    { label: "মিউজিক", href: "#music" },
     { label: "ইবুক", href: "#ebooks" },
     { label: "ডিরেক্টরি", href: "#directory" },
     { label: "সম্পর্কে", href: "#about" },
