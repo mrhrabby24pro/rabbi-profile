@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import MusicPlayer from './components/MusicPlayer';
 import EbookReader from './components/EbookReader';
+import DigitalDirectory from './components/DigitalDirectory';
 import Resources from './components/Resources';
 import About from './components/About';
 import Projects from './components/Projects';
@@ -70,6 +71,7 @@ const App: React.FC = () => {
         />
         <MusicPlayer />
         <EbookReader />
+        <DigitalDirectory />
         <Resources />
         <About 
           data={siteData.about} 
