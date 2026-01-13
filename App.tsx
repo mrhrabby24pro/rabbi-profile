@@ -13,10 +13,6 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 
 const defaultData = {
-  hero: {
-    title: "স্বাগতম!",
-    subtitle: "আমি রাব্বি হোসেন। প্রযুক্তি শিখছি, নতুন কিছু তৈরি করছি এবং অর্জিত জ্ঞান সবার সাথে শেয়ার করতে পছন্দ করি। এটি আমার ডিজিটাল ডায়েরি।"
-  },
   about: {
     p1: "প্রযুক্তির জগতের প্রতি আমার আগ্রহ ছোটবেলা থেকেই। আমি বিশ্বাস করি শেখার কোনো শেষ নেই। প্রতিদিন নতুন কিছু শেখা এবং সেটাকে বাস্তবে রূপান্তর করাই আমার লক্ষ্য।",
     p2: "আমার আগ্রহের প্রধান ক্ষেত্রগুলো হলো ওয়েব ডেভেলপমেন্ট, প্রোগ্রামিং এবং ব্যক্তিগত উন্নয়ন। প্রযুক্তির মাধ্যমে সমস্যা সমাধান করতে আমি ভালোবাসি।"
@@ -65,11 +61,7 @@ const App: React.FC = () => {
       <Navbar />
       
       <main className="flex-grow pt-16">
-        <Hero 
-          data={siteData.hero} 
-          editMode={isAdmin} 
-          onUpdate={(hero) => updateData({...siteData, hero})} 
-        />
+        <Hero />
         <EbookReader />
         <DigitalDirectory />
         <TouristSpots />
